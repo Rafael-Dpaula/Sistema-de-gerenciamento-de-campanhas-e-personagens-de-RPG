@@ -26,3 +26,8 @@ As funcionalidades contempladas pelo sistema serão:
 - **Rolagem de dados:** ferramenta para realizar rolagens dos dados utilizados nas mecânicas do sistema.
 - **Cálculos automáticos:** cálculo de valores derivados das fichas e das regras contempladas, reduzindo a necessidade de operações manuais.
 - **Ferramentas básicas para sessões:** disponibilização dos recursos mínimos necessários para apoiar a realização de uma partida, respeitando as permissões de jogadores e mestres.
+
+# 2. Análise do projeto
+
+## 2.1. Levantamento de requisitos
+[Requisitos do sistema](Requisitos_GerenciadorRPG.pdf)
