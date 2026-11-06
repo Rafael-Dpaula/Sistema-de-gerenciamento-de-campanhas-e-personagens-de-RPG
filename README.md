@@ -30,4 +30,4 @@ Foi utilizada a ferramenta ChatGPT, da OpenAI, modelo GPT-6, como apoio durante 
 
 A ferramenta foi utilizada para auxiliar na estruturação do sistema, e na elaboração inicial do projeto.
 
-As sugestões geradas foram analisadas e adaptadas conforme as decisões e necessidades do projeto, sendo o aluno responsável pela revisão e validação do conteúdo apresentado.
+As sugestões geradas foram analisadas e adaptadas conforme as decisões e necessidades do projeto, sendo o desenvolvedor responsável pela revisão e validação do conteúdo apresentado.
