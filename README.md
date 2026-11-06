@@ -26,7 +26,7 @@ A documentação completa do projeto, incluindo descrição do sistema, requisit
 
 ## Declaração de uso de Inteligência Artificial
 
-Foi utilizada a ferramenta ChatGPT, da OpenAI, como apoio durante a elaboração e organização da documentação do projeto.
+Foi utilizada a ferramenta ChatGPT, da OpenAI, modelo GPT-6, como apoio durante a elaboração e organização da documentação do projeto.
 
 A ferramenta foi utilizada para auxiliar na estruturação do sistema, e na elaboração inicial do projeto.
 
