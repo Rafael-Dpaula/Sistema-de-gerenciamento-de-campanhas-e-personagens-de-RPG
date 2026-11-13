@@ -30,7 +30,14 @@ As funcionalidades contempladas pelo sistema serão:
 # 2. Análise do projeto
 
 ## 2.1. Levantamento de requisitos
+> Documento detalhando cada requisito levantado e sua finalidade para estruturação e desenvolvimento do projeto.
+
 [Requisitos do sistema](Requisitos_GerenciadorRPG.pdf)
 
 ## 2.2. Diagrama de Casos de Uso
 ![Diagrama de casos de Uso](diagrama-de-caso-uso.svg)
+
+## 2.3. Documentação do diagrama de Casos de Uso
+> Documentação completa descrevendo em detalhes a responsabilidade e funcionalidade de cada caso de uso representado pelo diagrama.
+
+[Documentação do diagrama](DocumentacaoCasoUsoRPG.pdf)
