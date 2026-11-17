@@ -54,7 +54,9 @@ As funcionalidades contempladas pelo sistema serão:
 + [Documentação UC10](./documentacoes/caso_UC10.docx.pdf)
 + [Documentação UC11](./documentacoes/caso_UC11.docx.pdf)
 
-## 2.4. Diagrama de Classes Conceitual
+# 3. Fase de Projeto
+
+## 3.1. Diagrama de Classes Conceitual
 > Diagrama conceitual detalhando a estrutura lógica orientada a objetos do projeto
 
 ![Diagrama de classes conceitual](./diagramas/diagrama-classes-conceitual.svg)
