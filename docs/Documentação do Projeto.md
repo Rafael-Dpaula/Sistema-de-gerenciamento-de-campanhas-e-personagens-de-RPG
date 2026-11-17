@@ -40,7 +40,19 @@ As funcionalidades contempladas pelo sistema serão:
 ## 2.3. Documentação do diagrama de Casos de Uso
 > Documentação completa descrevendo em detalhes a responsabilidade e funcionalidade de cada caso de uso representado pelo diagrama.
 
-[Documentação do diagrama](./documentacoes/DocumentacaoCasoUsoRPG.pdf)
++ [Documentação do diagrama](./documentacoes/DocumentacaoCasoUsoRPG.pdf)
+> Documentação separada de cada caso de uso detalhado.
++ [Documentação UC01](./documentacoes/caso_UC01.docx.pdf)
++ [Documentação UC02](./documentacoes/caso_UC02.docx.pdf)
++ [Documentação UC03](./documentacoes/caso_UC03.docx.pdf)
++ [Documentação UC04](./documentacoes/caso_UC04.docx.pdf)
++ [Documentação UC05](./documentacoes/caso_UC05.docx.pdf)
++ [Documentação UC06](./documentacoes/caso_UC06.docx.pdf)
++ [Documentação UC07](./documentacoes/caso_UC07.docx.pdf)
++ [Documentação UC08](./documentacoes/caso_UC08.docx.pdf)
++ [Documentação UC09](./documentacoes/caso_UC09.docx.pdf)
++ [Documentação UC10](./documentacoes/caso_UC10.docx.pdf)
++ [Documentação UC11](./documentacoes/caso_UC11.docx.pdf)
 
 ## 2.4. Diagrama de Classes Conceitual
 > Diagrama conceitual detalhando a estrutura lógica orientada a objetos do projeto
