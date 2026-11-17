@@ -41,3 +41,8 @@ As funcionalidades contempladas pelo sistema serão:
 > Documentação completa descrevendo em detalhes a responsabilidade e funcionalidade de cada caso de uso representado pelo diagrama.
 
 [Documentação do diagrama](DocumentacaoCasoUsoRPG.pdf)
+
+## 2.4. Diagrama de Classes Conceitual
+> Diagrama conceitual detalhando a estrutura lógica orientada a objetos do projeto
+
+![Diagrama de classes conceitual](diagrama-classes-conceitual.svg)
