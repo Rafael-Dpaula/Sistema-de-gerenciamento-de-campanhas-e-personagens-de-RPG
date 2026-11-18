@@ -15,6 +15,9 @@ Entre as funcionalidades previstas estão a criação e gerenciamento de persona
 O sistema contará com diferentes permissões para jogadores e mestres, permitindo que cada perfil tenha acesso às funcionalidades correspondentes às suas responsabilidades.
 
 ## Diagrama de Classes
+> diagrama conceitual de classes
+
+![diagrama](./docs/diagramas/diagrama-classes-conceitual.svg)
 
 ## Documentação
 
