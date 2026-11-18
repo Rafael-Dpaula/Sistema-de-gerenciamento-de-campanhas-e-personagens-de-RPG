@@ -57,6 +57,11 @@ As funcionalidades contempladas pelo sistema serão:
 # 3. Fase de Projeto
 
 ## 3.1. Diagrama de Classes Conceitual
-> Diagrama conceitual detalhando a estrutura lógica orientada a objetos do projeto
+> Diagrama conceitual detalhando a estrutura lógica e responsabilidades das classes
 
 ![Diagrama de classes conceitual](./diagramas/diagrama-classes-conceitual.svg)
+
+## 3.2. Diagrama de Classes de Domínio
+> Diagrama de domínio detalhando as funcionalidades e operações de cada classe
+
+![diagrama](./diagramas/diagrama-classes-dominio.svg)
