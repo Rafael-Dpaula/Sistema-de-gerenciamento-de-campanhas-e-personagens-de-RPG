@@ -65,3 +65,15 @@ As funcionalidades contempladas pelo sistema serão:
 > Diagrama de domínio detalhando as funcionalidades e operações de cada classe
 
 ![diagrama](./diagramas/diagrama-classes-dominio.svg)
+
+## 3.3. Diagrama de Estado de Máquina
+> Diagrama que detalha os estados da classe Personagem
+
+![diagrama](./diagramas/diagrama-estado-maquina-personagem.svg)
+
+> Diagrama que detalha os estados da classe Campanha
+
+![diagrama](./diagramas/diagrama-estado-maquina-campanha.svg)
+
+# Protótipo do projeto
+> Protótipo demonstrativo visual do projeto destacando suas funcionalidades
