@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arconte — Gerenciador de Campanhas</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg: #171513;
+      --panel: #211e1a;
+      --panel2: #29241f;
+      --border: #44382d;
+      --text: #e8dfd2;
+      --muted: #a69a89;
+      --gold: #c4a46a;
+      --purple: #a78bda;
+      --purple-dark: #6f559d;
+      --red: #a9574d;
+      --green: #779879;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, sans-serif;
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 270px;
+      min-width: 270px;
+      background:
+        linear-gradient(rgba(24, 20, 17, .93), rgba(24, 20, 17, .96)),
+        var(--sidebar-image, #25201b);
+      background-image:
+        url("assets/sidebar-arconte.jpg");
+      background-size: cover;
+      background-position: center;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 22px 16px;
+    }
+
+    .status {
+      font-size: 10px;
+      color: #a7b995;
+      border: 1px solid #46513d;
+      background: #20271d;
+      padding: 7px 10px;
+      border-radius: 20px
+    }
+
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 7px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      width: 90px;
+      height: 90px;
+      color: #b8a2df;
+      display: grid;
+      place-items: center;
+      font-family: Cinzel, serif;
+      font-size: 11px;
+      flex-shrink: 0;
+      /* background: rgba(0, 0, 0, .2); */
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: none;
+    }
+
+    .brand h1 {
+      font-family: Cinzel, serif;
+      color: var(--purple);
+      font-size: 23px;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .brand small {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .nav {
+      padding-top: 18px;
+    }
+
+    .nav-label {
+      color: #877b6c;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 13px 10px 7px;
+      text-transform: uppercase;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 0;
+      color: #c6b9a8;
+      background: transparent;
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 5px;
+      font-size: 13px;
+      margin: 2px 0;
+      transition: .2s;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: rgba(167, 139, 218, .14);
+      color: #d4c1f5;
+    }
+
+    .nav button.active {
+      border-left: 2px solid var(--purple);
+    }
+
+    .nav .campaign-link {
+      padding-left: 24px;
+      font-size: 12px;
+      color: #b8aa98;
+    }
+
+    .profile {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding: 17px 5px 0;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #493b5f;
+      border: 1px solid #9278bd;
+      display: grid;
+      place-items: center;
+      color: #e0d0fa;
+      font-family: Cinzel, serif;
+    }
+
+    .profile strong {
+      color: #c5b0e9;
+      font-size: 12px;
+    }
+
+    .profile small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 72px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 34px;
+      background: rgba(30, 26, 22, .8);
+    }
+
+    .topbar .breadcrumb {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .topbar .breadcrumb span {
+      color: var(--purple);
+    }
+
+    .content {
+      max-width: 1250px;
+      padding: 34px;
+      margin: auto;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+      animation: appear .2s ease;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: .3;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2,
+    h3,
+    h4 {
+      font-family: Cinzel, serif;
+      font-weight: 500;
+    }
+
+    h2 {
+      font-size: 27px;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-family: Cinzel, serif;
+      font-size: 17px;
+      margin: 30px 0 14px;
+      color: #dfcfb8;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 19px;
+    }
+
+    .stat-number {
+      font-family: Cinzel, serif;
+      font-size: 30px;
+      color: var(--gold);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .action {
+      background: var(--purple-dark);
+      color: #f2eafb;
+      border: 1px solid #9277b7;
+      padding: 10px 15px;
+      border-radius: 4px;
+      font-size: 12px;
+      transition: .2s;
+    }
+
+    .action:hover {
+      background: #8065aa;
+    }
+
+    .action.secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .action.secondary:hover {
+      background: var(--panel2);
+    }
+
+    .action.danger {
+      background: #713c38;
+      border-color: #9d5c55;
+    }
+
+    .action.gold {
+      background: #705a35;
+      border-color: #a78a56;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 4px;
+      min-width: 190px;
+    }
+
+    .item-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .item-art {
+      height: 115px;
+      background: linear-gradient(135deg, #332b24, #191715);
+      display: grid;
+      place-items: center;
+      color: #9b8566;
+      font-family: Cinzel, serif;
+      font-size: 34px;
+    }
+
+    .item-body {
+      padding: 15px;
+    }
+
+    .item-body h3 {
+      margin: 0 0 7px;
+      font-size: 16px;
+    }
+
+    .item-body p {
+      color: var(--muted);
+      font-size: 11px;
+      margin: 0 0 13px;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-block;
+      border: 1px solid #63523d;
+      color: var(--gold);
+      padding: 4px 7px;
+      font-size: 10px;
+      border-radius: 3px;
+      margin-bottom: 9px;
+    }
+
+    .tag.purple {
+      border-color: #665182;
+      color: #c5b0e9;
+    }
+
+    .tag.green {
+      border-color: #506b50;
+      color: #a7c6a6;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      font-size: 12px;
+    }
+
+    .table th,
+    .table td {
+      text-align: left;
+      padding: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table th {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .table td {
+      color: #d4c9ba;
+    }
+
+    .table button {
+      margin: 2px;
+    }
+
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 18px;
+    }
+
+    .detail-banner {
+      background: linear-gradient(120deg, #382d25, #211c18);
+      border: 1px solid var(--border);
+      padding: 27px;
+      margin-bottom: 18px;
+    }
+
+    .detail-banner h2 {
+      color: var(--gold);
+    }
+
+    .field {
+      margin-bottom: 13px;
+    }
+
+    .field label {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      background: #171513;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .field textarea {
+      min-height: 75px;
+      resize: vertical;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: rgba(0, 0, 0, .75);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #241f1a;
+      border: 1px solid #66533d;
+      border-radius: 6px;
+      padding: 24px;
+    }
+
+    .modal h3 {
+      margin: 0 0 20px;
+      color: var(--gold);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .map-area {
+      min-height: 430px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background-color: #302a24;
+      background-image:
+        linear-gradient(rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(210, 190, 150, .08) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(210, 190, 150, .08) 40px),
+        url("assets/mapa-floresta.png");
+      background-size: 100% 100%, 100% 100%, 100% 100%, cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .map-token {
+      position: absolute;
+      width: 43px;
+      height: 43px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      background: #4d3d2b;
+      color: #fff0d4;
+      display: grid;
+      place-items: center;
+      cursor: grab;
+      user-select: none;
+      font-family: Cinzel, serif;
+      font-size: 12px;
+      box-shadow: 0 3px 8px #0008;
+    }
+
+    .map-token.npc {
+      border-color: #bd6d62;
+      background: #61352f;
+    }
+
+    .dice-result {
+      text-align: center;
+      padding: 30px;
+      background: #191613;
+      border: 1px solid var(--border);
+      margin: 15px 0;
+    }
+
+    .dice-result strong {
+      font-family: Cinzel, serif;
+      font-size: 48px;
+      color: var(--gold);
+    }
+
+    .dice-result p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .ability {
+      text-align: center;
+      background: #191613;
+      padding: 13px 5px;
+      border: 1px solid var(--border);
+    }
+
+    .ability strong {
+      display: block;
+      color: var(--gold);
+      font-family: Cinzel, serif;
+      font-size: 22px;
+    }
+
+    .ability small {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .empty {
+      padding: 35px;
+      text-align: center;
+      border: 1px dashed var(--border);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #332a3e;
+      border: 1px solid #8169a2;
+      color: #e9dcfa;
+      padding: 12px 18px;
+      border-radius: 4px;
+      display: none;
+      z-index: 20;
+      font-size: 12px;
+    }
+
+    @media(max-width:800px) {
+      .sidebar {
+        width: 210px;
+        min-width: 210px;
+      }
+
+      .content {
+        padding: 22px 16px;
+      }
+
+      .topbar {
+        padding: 0 17px;
+      }
+
+      .detail-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width:580px) {
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        min-width: 0;
+        padding: 12px;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav-label {
+        grid-column: 1/-1;
+      }
+
+      .profile {
+        display: none;
+      }
+
+      .brand {
+        padding-bottom: 12px;
+      }
+
+      .topbar {
+        height: 48px;
+      }
+
+      .sheet-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo" id="logoBox"><img src="assets/logo-arconte.png" alt="Logo"
+            onerror="this.onerror=null; this.outerHTML='<span class=&quot;fallback&quot;>LOGO</span>'"> </div>
+
+        <div>
+          <h1>ARCONTE</h1>
+          <small>GERENCIADOR DE CAMPANHAS</small>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-label">Geral</div>
+        <button class="active" data-page="dashboard">⌂ &nbsp; Visão geral</button>
+        <button data-page="characters">♙ &nbsp; Meus personagens</button>
+        <button data-page="dice">⚄ &nbsp; Rolagem de dados</button>
+
+        <div class="nav-label">Campanhas que participo</div>
+        <button class="campaign-link" data-page="player-campaign">↳ Ecos de Neverwinter</button>
+
+        <div class="nav-label">Campanhas que mestro</div>
+        <button class="campaign-link" data-page="campaigns">↳ Minhas campanhas</button>
+        <button class="campaign-link" data-page="participants">↳ Participantes e NPCs</button>
+        <button class="campaign-link" data-page="maps">↳ Gerenciar mapas</button>
+
+        <div class="nav-label">Sistema</div>
+        <button data-page="settings">⚙ &nbsp; Configurações</button>
+      </nav>
+
+      <div class="profile">
+        <div class="avatar">R</div>
+        <div>
+          <strong>Rafael Depaula</strong>
+          <small>Conta de aventureiro</small>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumb">Arconte &nbsp; / &nbsp; <span id="breadcrumb">Visão geral</span></div>
+        <span class="status">● Protótipo</span>
+      </header>
+
+      <div class="content">
+
+        <section class="page active" id="dashboard">
+          <h2>Bem-vindo de volta.</h2>
+          <p class="subtitle">Suas aventuras, personagens e campanhas em um só lugar.</p>
+
+          <div class="grid">
+            <div class="card">
+              <div class="stat-number" id="characterCount">2</div>
+              <div class="stat-label">Personagens registrados</div>
+            </div>
+            <div class="card">
+              <div class="stat-number" id="campaignCount">2</div>
+              <div class="stat-label">Campanhas em andamento</div>
+            </div>
+            <div class="card">
+              <div class="stat-number">1</div>
+              <div class="stat-label">Campanhas como jogador</div>
+            </div>
+            <div class="card">
+              <div class="stat-number">1</div>
+              <div class="stat-label">Campanhas como mestre</div>
+            </div>
+          </div>
+
+          <h3 class="section-title">Acesso rápido</h3>
+          <div class="grid">
+            <div class="card">
+              <h3>Seus personagens</h3>
+              <p class="subtitle">Consulte e atualize suas fichas.</p>
+              <button class="action" onclick="navigate('characters')">Abrir personagens</button>
+            </div>
+            <div class="card">
+              <h3>Suas campanhas</h3>
+              <p class="subtitle">Continue de onde sua aventura parou.</p>
+              <button class="action" onclick="navigate('campaigns')">Abrir campanhas</button>
+            </div>
+            <div class="card">
+              <h3>Rolagem de dados</h3>
+              <p class="subtitle">Deixe o destino decidir.</p>
+              <button class="action" onclick="navigate('dice')">Rolar dados</button>
+            </div>
+          </div>
+
+          <h3 class="section-title">Aventuras recentes</h3>
+          <div class="grid">
+            <div class="card">
+              <span class="tag purple">Jogador</span>
+              <h3>Ecos de Neverwinter</h3>
+              <p class="subtitle">Você participa desta campanha.</p>
+              <button class="action secondary" onclick="navigate('player-campaign')">Acessar</button>
+            </div>
+            <div class="card">
+              <span class="tag">Mestre</span>
+              <h3>A Queda de Valdoria</h3>
+              <p class="subtitle">Você administra esta campanha.</p>
+              <button class="action secondary" onclick="navigate('campaign-detail')">Administrar</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="characters">
+          <h2>Meus personagens</h2>
+          <p class="subtitle">Personagens vinculados à sua conta.</p>
+          <div class="toolbar">
+            <input id="characterSearch" placeholder="Pesquisar personagem..." oninput="renderCharacters()">
+            <button class="action" onclick="openModal('characterModal')">+ Novo personagem</button>
+          </div>
+          <div class="grid" id="characterList"></div>
+        </section>
+
+        <section class="page" id="character-sheet">
+          <button class="action secondary" onclick="navigate('characters')">← Voltar</button>
+          <div class="detail-banner" style="margin-top:16px">
+            <span class="tag purple">Ficha de personagem</span>
+            <h2 id="sheetName">Aventureiro</h2>
+            <p id="sheetDescription" class="subtitle">Ficha de personagem</p>
+          </div>
+          <div class="detail-layout">
+            <div>
+              <div class="card">
+                <h3>Características</h3>
+                <div class="sheet-grid" id="sheetAbilities"></div>
+              </div>
+              <div class="card" style="margin-top:15px">
+                <h3>Informações gerais</h3>
+                <p id="sheetInfo" class="subtitle"></p>
+                <button class="action" onclick="editCurrentCharacter()">Editar personagem</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Pontos de vida</h3>
+              <div class="stat-number" id="sheetHp">0 / 0</div>
+              <p class="subtitle">Pontos de vida atuais / máximos</p>
+              <h3>Estado</h3>
+              <span class="tag green" id="sheetState">Vivo</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="campaigns">
+          <h2>Campanhas que mestro</h2>
+          <p class="subtitle">Aventure-se na criação e administração de suas próprias histórias.</p>
+          <div class="toolbar">
+            <button class="action" onclick="openModal('campaignModal')">+ Criar campanha</button>
+          </div>
+          <div class="grid" id="campaignList"></div>
+        </section>
+
+        <section class="page" id="campaign-detail">
+          <button class="action secondary" onclick="navigate('campaigns')">← Voltar às campanhas</button>
+          <div class="detail-banner" style="margin-top:16px">
+            <span class="tag">Mestre</span>
+            <h2 id="detailCampaignName">A Queda de Valdoria</h2>
+            <p id="detailCampaignDescription" class="subtitle"></p>
+          </div>
+          <div class="grid">
+            <div class="card">
+              <div class="stat-number" id="detailParticipants">0</div>
+              <div class="stat-label">Participantes</div>
+            </div>
+            <div class="card">
+              <div class="stat-number" id="detailMaps">0</div>
+              <div class="stat-label">Mapas cadastrados</div>
+            </div>
+          </div>
+          <h3 class="section-title">Administração</h3>
+          <div class="grid">
+            <div class="card">
+              <h3>Participantes e NPCs</h3>
+              <p class="subtitle">Gerencie os personagens presentes na campanha.</p><button class="action"
+                onclick="navigate('participants')">Gerenciar</button>
+            </div>
+            <div class="card">
+              <h3>Mapas</h3>
+              <p class="subtitle">Adicione e organize os mapas da aventura.</p><button class="action"
+                onclick="navigate('maps')">Gerenciar</button>
+            </div>
+            <div class="card">
+              <h3>Mapa da aventura</h3>
+              <p class="subtitle">Posicione e movimente personagens.</p><button class="action"
+                onclick="navigate('map-play')">Abrir mapa</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="player-campaign">
+          <h2>Campanhas que participo</h2>
+          <p class="subtitle">Campanhas nas quais você atua como jogador.</p>
+          <div class="detail-banner">
+            <span class="tag purple">Jogador</span>
+            <h2>Ecos de Neverwinter</h2>
+            <p class="subtitle">Uma cidade à beira do caos. Rumores falam sobre uma antiga ameaça despertando nas
+              profundezas.</p>
+            <button class="action" onclick="navigate('player-detail')">Acessar campanha</button>
+          </div>
+        </section>
+
+        <section class="page" id="player-detail">
+          <button class="action secondary" onclick="navigate('player-campaign')">← Voltar</button>
+          <div class="detail-banner" style="margin-top:16px">
+            <span class="tag purple">Jogador</span>
+            <h2>Ecos de Neverwinter</h2>
+            <p class="subtitle">Campanha administrada por outro mestre.</p>
+          </div>
+          <div class="card">
+            <h3>Seu personagem nesta campanha</h3>
+            <p class="subtitle">Escolha qual personagem da sua conta será utilizado.</p>
+            <div class="field">
+              <select id="playerCharacterSelect"></select>
+            </div>
+            <button class="action" onclick="notify('Personagem associado à campanha!')">Associar personagem</button>
+          </div>
+          <div class="card" style="margin-top:15px">
+            <h3>Mapa da campanha</h3>
+            <p class="subtitle">Visualização do mapa disponibilizado pelo mestre.</p>
+            <button class="action secondary" onclick="navigate('map-play')">Visualizar mapa</button>
+          </div>
+        </section>
+
+        <section class="page" id="participants">
+          <h2>Participantes e NPCs</h2>
+          <p class="subtitle">Gerencie os personagens vinculados à campanha que você administra.</p>
+          <div class="toolbar">
+            <select id="participantFilter" onchange="renderParticipants()">
+              <option value="all">Todos</option>
+              <option value="Jogador">Jogadores</option>
+              <option value="NPC">NPCs</option>
+            </select>
+            <button class="action" onclick="openModal('participantModal')">+ Adicionar personagem</button>
+          </div>
+          <div class="card">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Personagem</th>
+                  <th>Tipo</th>
+                  <th>Jogador responsável</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="participantList"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="page" id="maps">
+          <h2>Gerenciamento de mapas</h2>
+          <p class="subtitle">Adicione imagens para representar os cenários de suas campanhas.</p>
+          <div class="toolbar">
+            <button class="action" onclick="document.getElementById('mapUpload').click()">+ Enviar mapa</button>
+            <input type="file" id="mapUpload" accept="image/*" hidden onchange="uploadMap(event)">
+          </div>
+          <div class="grid" id="mapList"></div>
+          <h3 class="section-title">Manipulação de personagens</h3>
+          <div class="card">
+            <p class="subtitle">Abra o mapa para posicionar e movimentar personagens e NPCs.</p>
+            <button class="action" onclick="navigate('map-play')">Abrir mapa interativo</button>
+          </div>
+        </section>
+
+        <section class="page" id="map-play">
+          <h2>Mapa da aventura</h2>
+          <p class="subtitle">Arraste os marcadores para alterar o posicionamento dos personagens.</p>
+          <div class="toolbar">
+            <button class="action secondary" onclick="addToken()">+ Adicionar marcador</button>
+            <button class="action secondary" onclick="navigate('maps')">Gerenciar mapas</button>
+          </div>
+          <div class="map-area" id="mapArea">
+            <div class="map-token" style="left:20%;top:25%" draggable="true">AR</div>
+            <div class="map-token npc" style="left:55%;top:40%" draggable="true">NPC</div>
+            <div class="map-token" style="left:72%;top:70%" draggable="true">?</div>
+          </div>
+          <p class="subtitle" style="margin-top:12px">Os marcadores podem ser movimentados livremente pelo mapa.</p>
+        </section>
+
+        <section class="page" id="dice">
+          <h2>Rolagem de dados</h2>
+          <p class="subtitle">Realize rolagens para os diferentes dados utilizados em suas aventuras.</p>
+          <div class="card" style="max-width:550px">
+            <div class="field">
+              <label>Quantidade de dados</label>
+              <input type="number" id="diceQty" value="1" min="1" max="100">
+            </div>
+            <div class="field">
+              <label>Tipo de dado</label>
+              <select id="diceType">
+                <option value="4">D4</option>
+                <option value="6">D6</option>
+                <option value="8">D8</option>
+                <option value="10">D10</option>
+                <option value="12">D12</option>
+                <option value="20" selected>D20</option>
+                <option value="100">D100</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Modificador</label>
+              <input type="number" id="diceModifier" value="0">
+            </div>
+            <button class="action" onclick="rollDice()">Rolar dados</button>
+            <div class="dice-result">
+              <strong id="diceTotal">—</strong>
+              <p id="diceBreakdown">O resultado aparecerá aqui.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="settings">
+          <h2>Configurações</h2>
+          <div class="card" style="max-width:600px;margin-top:15px">
+            <h3>Conta</h3>
+            <p class="subtitle">Rafael Depaula — Conta de aventureiro</p>
+            <button class="action secondary" onclick="notify('Configurações de conta demonstrativas.')">Editar
+              perfil</button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="characterModal">
+    <div class="modal">
+      <h3 id="characterModalTitle">Novo personagem</h3>
+      <input type="hidden" id="editCharacterId">
+      <div class="field"><label>Nome</label><input id="charName" placeholder="Nome do personagem"></div>
+      <div class="field"><label>Raça</label><input id="charRace" placeholder="Ex.: Elfo, Humano..."></div>
+      <div class="field"><label>Classe</label><input id="charClass" placeholder="Ex.: Mago, Guerreiro..."></div>
+      <div class="field"><label>Nível</label><input type="number" id="charLevel" min="1" max="20" value="1"></div>
+      <div class="field"><label>Pontos de vida máximos</label><input type="number" id="charHp" value="10"></div>
+      <div class="modal-footer">
+        <button class="action secondary" onclick="closeModal('characterModal')">Cancelar</button>
+        <button class="action" onclick="saveCharacter()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="campaignModal">
+    <div class="modal">
+      <h3>Nova campanha</h3>
+      <div class="field"><label>Nome da campanha</label><input id="campaignName" placeholder="Nome da aventura"></div>
+      <div class="field"><label>Descrição</label><textarea id="campaignDescription"
+          placeholder="Descreva brevemente sua campanha"></textarea></div>
+      <div class="modal-footer">
+        <button class="action secondary" onclick="closeModal('campaignModal')">Cancelar</button>
+        <button class="action" onclick="saveCampaign()">Criar campanha</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="participantModal">
+    <div class="modal">
+      <h3>Adicionar participante ou NPC</h3>
+      <div class="field"><label>Nome do personagem</label><input id="participantName" placeholder="Nome"></div>
+      <div class="field"><label>Tipo</label>
+        <select id="participantType">
+          <option value="Jogador">Personagem de jogador</option>
+          <option value="NPC">NPC</option>
+        </select>
+      </div>
+      <div class="field"><label>Jogador responsável (opcional)</label><input id="participantOwner"
+          placeholder="Nome do jogador"></div>
+      <div class="modal-footer">
+        <button class="action secondary" onclick="closeModal('participantModal')">Cancelar</button>
+        <button class="action" onclick="saveParticipant()">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let characters = [
+      {id: 1, name: "Aerendil", race: "Shadar-kai", class: "Mago", level: 3, hp: 18, maxHp: 18, NPC: false},
+      {id: 2, name: "Thorin", race: "Anão", class: "Guerreiro", level: 2, hp: 20, maxHp: 20, NPC: false}
+    ];
+
+    let campaigns = [
+      {id: 1, name: "A Queda de Valdoria", description: "Uma antiga ameaça desperta nas terras esquecidas.", status: "Ativa"},
+      {id: 2, name: "O Véu das Cinzas", description: "Uma jornada por reinos marcados pela guerra.", status: "Em preparação"}
+    ];
+
+    let participants = [
+      {id: 1, name: "Aerendil", type: "Jogador", owner: "Rafael"},
+      {id: 2, name: "Thorin", type: "Jogador", owner: "Marcos"},
+      {id: 3, name: "Guardião das Ruínas", type: "NPC", owner: "Mestre"}
+    ];
+
+    let maps = ["Floresta Esquecida"];
+    let currentCharacter = null;
+
+    const pageNames = {
+      dashboard: "Visão geral", characters: "Meus personagens",
+      "character-sheet": "Ficha de personagem", campaigns: "Minhas campanhas",
+      "campaign-detail": "Detalhes da campanha",
+      "player-campaign": "Campanhas que participo",
+      "player-detail": "Detalhes da campanha",
+      participants: "Participantes e NPCs", maps: "Gerenciar mapas",
+      "map-play": "Mapa da aventura", dice: "Rolagem de dados",
+      settings: "Configurações"
+    };
+
+    function navigate(id) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("active", b.dataset.page === id));
+      document.getElementById("breadcrumb").textContent = pageNames[id] || id;
+      if (id === "characters") renderCharacters();
+      if (id === "campaigns") renderCampaigns();
+      if (id === "participants") renderParticipants();
+      if (id === "maps") renderMaps();
+      if (id === "campaign-detail") updateCampaignDetail();
+      if (id === "player-detail") updatePlayerCharacters();
+      window.sxllTo(0, 0);
+    }
+
+    document.querySelectorAll(".nav button").forEach(button => {
+      button.addEventListener("click", () => navigate(button.dataset.page));
+    });
+
+    function openModal(id) {document.getElementById(id).classList.add("open");}
+    function closeModal(id) {document.getElementById(id).classList.remove("open");}
+
+    function notify(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 2600);
+    }
+
+    function renderCharacters() {
+      const query = (document.getElementById("characterSearch")?.value || "").toLowerCase();
+      const list = document.getElementById("characterList");
+      const filtered = characters.filter(c => c.name.toLowerCase().includes(query));
+      list.innerHTML = filtered.map(c => `
+    <div class="item-card">
+      <div class="item-art">✧</div>
+      <div class="item-body">
+        <span class="tag purple">Nível ${c.level}</span>
+        <h3>${escapeHTML(c.name)}</h3>
+        <p>${escapeHTML(c.race)} · ${escapeHTML(c.class)}</p>
+        <div class="item-actions">
+          <button class="action" onclick="showSheet(${c.id})">Abrir ficha</button>
+          <button class="action secondary" onclick="editCharacter(${c.id})">Editar</button>
+          <button class="action danger" onclick="deleteCharacter(${c.id})">Excluir</button>
+        </div>
+      </div>
+    </div>`).join("") || '<div class="empty">Nenhum personagem encontrado.</div>';
+      document.getElementById("characterCount").textContent = characters.length;
+    }
+
+    function saveCharacter() {
+      const id = Number(document.getElementById("editCharacterId").value);
+      const name = document.getElementById("charName").value.trim();
+      if (!name) {notify("Informe o nome do personagem."); return;}
+      const data = {
+        name,
+        race: document.getElementById("charRace").value || "Não definida",
+        class: document.getElementById("charClass").value || "Não definida",
+        level: Number(document.getElementById("charLevel").value) || 1,
+        hp: Number(document.getElementById("charHp").value) || 10
+      };
+      if (id) {
+        const c = characters.find(c => c.id === id);
+        Object.assign(c, data, {maxHp: data.hp, hp: Math.min(c.hp, data.hp)});
+      } else {
+        characters.push({id: Date.now(), ...data, maxHp: data.hp, NPC: false});
+      }
+      closeModal("characterModal");
+      renderCharacters();
+      notify("Personagem salvo com sucesso!");
+      document.getElementById("editCharacterId").value = "";
+    }
+
+    function editCharacter(id) {
+      const c = characters.find(c => c.id === id);
+      if (!c) return;
+      document.getElementById("editCharacterId").value = c.id;
+      document.getElementById("charName").value = c.name;
+      document.getElementById("charRace").value = c.race;
+      document.getElementById("charClass").value = c.class;
+      document.getElementById("charLevel").value = c.level;
+      document.getElementById("charHp").value = c.maxHp;
+      document.getElementById("characterModalTitle").textContent = "Editar personagem";
+      openModal("characterModal");
+    }
+
+    function editCurrentCharacter() {
+      if (currentCharacter) editCharacter(currentCharacter);
+    }
+
+    function deleteCharacter(id) {
+      if (!confirm("Deseja excluir este personagem?")) return;
+      characters = characters.filter(c => c.id !== id);
+      renderCharacters();
+      notify("Personagem excluído.");
+    }
+
+    function showSheet(id) {
+      const c = characters.find(c => c.id === id);
+      if (!c) return;
+      currentCharacter = id;
+      document.getElementById("sheetName").textContent = c.name;
+      document.getElementById("sheetDescription").textContent = `${c.race} · ${c.class} · Nível ${c.level}`;
+      document.getElementById("sheetHp").textContent = `${c.hp} / ${c.maxHp}`;
+      document.getElementById("sheetInfo").textContent = `${c.race} · ${c.class} · Nível ${c.level}`;
+      document.getElementById("sheetAbilities").innerHTML = [a
+        ["FOR", 12], ["DES", 14], ["CON", 13], ["INT", 16], ["SAB", 12], ["CAR", 10]
+      ].map(([name, value]) => `<div class="ability"><strong>${value}</strong><small>${name}</small></div>`).join("");
+      navigate("character-sheet");
+    }
+
+    function renderCampaigns() {
+      document.getElementById("campaignList").innerHTML = campaigns.map(c => `
+    <div class="item-card">
+      <div class="item-art">♜</div>
+      <div class="item-body">
+        <span class="tag">${escapeHTML(c.status)}</span>
+        <h3>${escapeHTML(c.name)}</h3>
+        <p>${escapeHTML(c.description)}</p>
+        <div class="item-actions">
+          <button class="action" onclick="openCampaign(${c.id})">Administrar</button>
+          <button class="action danger" onclick="deleteCampaign(${c.id})">Excluir</button>
+        </div>
+      </div>
+    </div>`).join("") || '<div class="empty">Nenhuma campanha criada.</div>';
+      document.getElementById("campaignCount").textContent = campaigns.length + 1;
+    }
+
+    function saveCampaign() {
+      const name = document.getElementById("campaignName").value.trim();
+      if (!name) {notify("Informe o nome da campanha."); return;}
+      campaigns.push({
+        id: Date.now(),
+        name,
+        description: document.getElementById("campaignDescription").value,
+        status: "Em preparação"
+      });
+      document.getElementById("campaignName").value = "";
+      document.getElementById("campaignDescription").value = "";
+      closeModal("campaignModal");
+      renderCampaigns();
+      notify("Campanha criada!");
+    }
+
+    function openCampaign(id) {
+      window.currentCampaign = campaigns.find(c => c.id === id);
+      navigate("campaign-detail");
+    }
+
+    function updateCampaignDetail() {
+      const c = window.currentCampaign || campaigns[0];
+      document.getElementById("detailCampaignName").textContent = c.name;
+      document.getElementById("detailCampaignDescription").textContent = c.description;
+      document.getElementById("detailParticipants").textContent = participants.length;
+      document.getElementById("detailMaps").textContent = maps.length;
+    }
+
+    function deleteCampaign(id) {
+      if (!confirm("Deseja excluir esta campanha?")) return;
+      campaigns = campaigns.filter(c => c.id !== id);
+      renderCampaigns();
+      notify("Campanha excluída.");
+    }
+
+    function renderParticipants() {
+      const filter = document.getElementById("participantFilter").value;
+      const filtered = participants.filter(p => filter === "all" || p.type === filter);
+      document.getElementById("participantList").innerHTML = filtered.map(p => `
+    <tr>
+      <td>${escapeHTML(p.name)}</td>
+      <td><span class="tag ${p.type === "NPC" ? "" : "purple"}">${p.type}</span></td>
+      <td>${escapeHTML(p.owner || "—")}</td>
+      <td><button class="action danger" onclick="removeParticipant(${p.id})">Remover</button></td>
+    </tr>`).join("") || '<tr><td colspan="4">Nenhum personagem cadastrado.</td></tr>';
+    }
+
+    function saveParticipant() {
+      const name = document.getElementById("participantName").value.trim();
+      if (!name) {notify("Informe o nome do personagem."); return;}
+      participants.push({
+        id: Date.now(), name,
+        type: document.getElementById("participantType").value,
+        owner: document.getElementById("participantOwner").value || "—"
+      });
+      document.getElementById("participantName").value = "";
+      document.getElementById("participantOwner").value = "";
+      closeModal("participantModal");
+      renderParticipants();
+      notify("Personagem adicionado à campanha!");
+    }
+
+    function removeParticipant(id) {
+      if (!confirm("Remover este personagem da campanha?")) return;
+      participants = participants.filter(p => p.id !== id);
+      renderParticipants();
+    }
+
+    function renderMaps() {
+      document.getElementById("mapList").innerHTML = maps.map((m, i) => `
+    <div class="card">
+      <div class="item-art">🗺️​</div>
+      <h3>${escapeHTML(m)}</h3>
+      <p class="subtitle">Mapa de campanha</p>
+      <button class="action secondary" onclick="navigate('map-play')">Visualizar</button>
+      <button class="action danger" onclick="removeMap(${i})">Excluir</button>
+    </div>`).join("") || '<div class="empty">Nenhum mapa enviado.</div>';
+    }
+
+    function uploadMap(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      maps.push(file.name);
+      renderMaps();
+      notify("Mapa adicionado à lista.");
+    }
+
+    function removeMap(index) {
+      maps.splice(index, 1);
+      renderMaps();
+    }
+
+    function rollDice() {
+      const qty = Math.max(1, Math.min(100, Number(document.getElementById("diceQty").value) || 1));
+      const sides = Number(document.getElementById("diceType").value);
+      const modifier = Number(document.getElementById("diceModifier").value) || 0;
+      const rolls = Array.from({length: qty}, () => Math.floor(Math.random() * sides) + 1);
+      const total = rolls.reduce((a, b) => a + b, 0) + modifier;
+      document.getElementById("diceTotal").textContent = total;
+      document.getElementById("diceBreakdown").textContent =
+        `${qty}d${sides}: ${rolls.join(" + ")} ${modifier >= 0 ? "+" : "−"} ${Math.abs(modifier)} = ${total}`;
+    }
+
+    function addToken() {
+      const area = document.getElementById("mapArea");
+      const token = document.createElement("div");
+      token.className = "map-token";
+      token.textContent = "✦";
+      token.style.left = "40%";
+      token.style.top = "40%";
+      token.draggable = true;
+      area.appendChild(token);
+      enableDrag(token);
+    }
+
+    function enableDrag(token) {
+      token.addEventListener("pointerdown", e => {
+        e.preventDefault();
+        const area = document.getElementById("mapArea");
+        const rect = area.getBoundingClientRect();
+        const move = ev => {
+          const x = Math.max(0, Math.min(rect.width - 43, ev.clientX - rect.left - 21));
+          const y = Math.max(0, Math.min(rect.height - 43, ev.clientY - rect.top - 21));
+          token.style.left = (x / rect.width * 100) + "%";
+          token.style.top = (y / rect.height * 100) + "%";
+        };
+        const stop = () => {
+          window.removeEventListener("pointermove", move);
+          window.removeEventListener("pointerup", stop);
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", stop);
+      });
+    }
+
+    document.querySelectorAll(".map-token").forEach(enableDrag);
+
+    function updatePlayerCharacters() {
+      document.getElementById("playerCharacterSelect").innerHTML = characters.map(c =>
+        `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join("");
+    }
+
+    function loadLogo(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      document.getElementById("logoBox").innerHTML = `<img src="${url}" alt="Logo">`;
+    }
+
+    function loadSidebar(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      document.querySelector(".sidebar").style.backgroundImage =
+        `linear-gradient(rgba(24,20,17,.88),rgba(24,20,17,.94)),url("${url}")`;
+      document.querySelector(".sidebar").style.backgroundSize = "cover";
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      })[char]);
+    }
+
+    renderCharacters();
+    renderCampaigns();
+    renderParticipants();
+    renderMaps();
+  </script>
+</body>
+
+</html>
